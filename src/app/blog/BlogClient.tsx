@@ -190,11 +190,14 @@ export default function BlogClient({ initialPosts, isAdmin }: BlogClientProps) {
 
                       <div className="pt-4 border-t border-border flex justify-end">
                         <Button
+                          asChild
                           variant="ghost"
                           className="text-accent hover:text-accent/80 hover:bg-accent/10 p-0 text-sm font-semibold flex items-center gap-1 group"
                         >
-                          Voir plus
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          <Link href={`/blog/${post.id}`}>
+                            Voir plus
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </Link>
                         </Button>
                       </div>
                     </CardContent>
