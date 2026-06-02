@@ -10,11 +10,11 @@ import { notFound } from "next/navigation";
 export const revalidate = 0;
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-  const { id } = params;
+  const { id } = await params;
   
   if (!id || isNaN(Number(id))) {
     notFound();
