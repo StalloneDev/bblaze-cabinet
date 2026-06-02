@@ -34,7 +34,7 @@ export async function generateMetadata(
   const description = post.content.substring(0, 160) + "...";
   
   // Utiliser l'image de couverture ou une image par défaut (logo)
-  const imageUrl = post.imageUrl || "https://bblaze.fr/hero-law.jpg";
+  const imageUrl = post.imageUrl || "https://bblaze-cabinet-f7zk.vercel.app/hero-law.jpg";
 
   return {
     title,
@@ -42,7 +42,7 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      url: `https://bblaze.fr/blog/${id}`,
+      url: `https://bblaze-cabinet-f7zk.vercel.app/blog/${id}`,
       siteName: "Cabinet BBLAZE",
       images: [
         {
@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   });
 
   // URL canonique pour le partage
-  const currentUrl = `https://bblaze.fr/blog/${post.id}`;
+  const currentUrl = `https://bblaze-cabinet-f7zk.vercel.app/blog/${post.id}`;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
