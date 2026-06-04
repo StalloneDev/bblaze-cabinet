@@ -13,6 +13,14 @@ model Service {
   description String
   content     String @db.Text
   icon        String // e.g. "Briefcase", "Users", etc.
+  imageUrl    String? @db.Text // Image uploadée en Base64
+}
+
+model AboutInfo {
+  id          String @id @default("singleton")
+  title       String
+  content     String @db.Text
+  imageUrl    String? @db.Text
 }
 
 model ContactInfo {

@@ -31,6 +31,10 @@ export default async function AdminDashboardPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const about = await prisma.aboutInfo.findFirst({
+    where: { id: "singleton" },
+  });
+
   return (
     <div className="min-h-screen bg-background flex flex-col justify-between">
       <Header />
@@ -42,6 +46,7 @@ export default async function AdminDashboardPage() {
             initialServices={services}
             initialMessages={messages}
             initialPosts={posts}
+            initialAbout={about}
           />
         </div>
       </main>

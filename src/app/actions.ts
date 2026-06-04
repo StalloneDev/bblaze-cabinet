@@ -81,6 +81,7 @@ export async function updateServiceAction(
     expertise: string[];
     bulletPoints: string[];
     icon: string;
+    imageBase64?: string;
   }
 ): Promise<{ success: boolean; error?: string }> {
   const isAuth = await checkAdminAuth();
@@ -92,21 +93,68 @@ export async function updateServiceAction(
       bulletPoints: data.bulletPoints,
     });
 
+    const updateData: any = {
+      title: data.title,
+      description: data.description,
+      content,
+      icon: data.icon,
+    };
+    
+    if (data.imageBase64 !== undefined) {
+      updateData.imageUrl = data.imageBase64;
+    }
+
     await prisma.service.update({
       where: { id },
-      data: {
-        title: data.title,
-        description: data.description,
-        content,
-        icon: data.icon,
-      },
+      data: updateData,
     });
     revalidatePath("/");
     revalidatePath(`/services/${id}`);
+    revalidatePath("/admin/dashboard");
     return { success: true };
   } catch (error) {
     console.error(error);
     return { success: false, error: "Erreur lors de la mise à jour du service" };
+  }
+}
+
+// 3.5 Gestion de la page À Propos
+export async function updateAboutAction(data: {
+  title: string;
+  content: string;
+  imageBase64?: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const isAuth = await checkAdminAuth();
+  if (!isAuth) return { success: false, error: "Non autorisé" };
+
+  try {
+    const updateData: any = {
+      title: data.title,
+      content: data.content,
+    };
+
+    if (data.imageBase64 !== undefined) {
+      updateData.imageUrl = data.imageBase64;
+    }
+
+    await prisma.aboutInfo.upsert({
+      where: { id: "singleton" },
+      update: updateData,
+      create: {
+        id: "singleton",
+        title: data.title,
+        content: data.content,
+        imageUrl: data.imageBase64 || null,
+      },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/about");
+    revalidatePath("/admin/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Erreur lors de la mise à jour de la page À propos" };
   }
 }
 

@@ -83,7 +83,7 @@ export default async function ServiceDetailsPage({
               {/* Grande image de couverture du service */}
               <div className="h-64 sm:h-96 w-full relative overflow-hidden rounded-2xl shadow-medium bg-muted">
                 <Image
-                  src={`/services/${service.id}.png`}
+                  src={service.imageUrl || `/services/${service.id}.png`}
                   alt={service.title}
                   fill
                   className="object-cover"

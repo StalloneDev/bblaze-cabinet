@@ -233,7 +233,7 @@ export default async function IndexPage() {
                     description={service.description}
                     icon={IconComponent}
                     link={`/services/${service.id}`}
-                    imageUrl={`/services/${service.id}.png`}
+                    imageUrl={service.imageUrl || `/services/${service.id}.png`}
                   />
                 </div>
               );

@@ -60,6 +60,7 @@ import {
   deleteContactMessageAction,
   createPostAction,
   toggleMessageReadAction,
+  updateAboutAction,
 } from "@/app/actions";
 
 interface DashboardClientProps {
@@ -67,6 +68,7 @@ interface DashboardClientProps {
   initialServices: any[];
   initialMessages: any[];
   initialPosts: any[];
+  initialAbout?: any;
 }
 
 export default function DashboardClient({
@@ -74,9 +76,10 @@ export default function DashboardClient({
   initialServices,
   initialMessages,
   initialPosts,
+  initialAbout,
 }: DashboardClientProps) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"services" | "contact" | "messages" | "posts">("services");
+  const [activeTab, setActiveTab] = useState<"services" | "contact" | "messages" | "posts" | "about">("services");
   const [isPending, setIsPending] = useState(false);
 
   // --- ÉTATS DE RECHERCHE ET FILTRAGE : MESSAGES CLIENTS ---
@@ -219,12 +222,16 @@ export default function DashboardClient({
     expertise: string[];
     bulletPoints: string[];
     icon: string;
+    imageBase64: string | null;
+    imagePreview: string | null;
   }>({
     title: "",
     description: "",
     expertise: [],
     bulletPoints: [],
     icon: "",
+    imageBase64: null,
+    imagePreview: null,
   });
 
   const handleStartEditService = (service: any) => {
@@ -245,7 +252,117 @@ export default function DashboardClient({
       expertise: parsedContent.expertise || [],
       bulletPoints: parsedContent.bulletPoints || [],
       icon: service.icon,
+      imageBase64: null,
+      imagePreview: service.imageUrl || null,
     });
+  };
+
+  const handleServiceImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "Image trop volumineuse",
+        description: "Veuillez sélectionner une image de moins de 2 Mo.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setServiceForm((prev) => ({
+        ...prev,
+        imageBase64: base64String,
+        imagePreview: base64String,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveServiceImage = () => {
+    setServiceForm((prev) => ({
+      ...prev,
+      imageBase64: null,
+      imagePreview: null,
+    }));
+  };
+
+  // --- ÉTAT ET TRANSMISSION : À PROPOS ---
+  const [aboutForm, setAboutForm] = useState({
+    title: initialAbout?.title || "Notre Histoire et Notre Vision",
+    content: initialAbout?.content || "Nous sommes un cabinet dédié à l'excellence...",
+    imageBase64: null as string | null,
+    imagePreview: initialAbout?.imageUrl || null as string | null,
+  });
+
+  const handleAboutImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "Image trop volumineuse",
+        description: "Veuillez sélectionner une image de moins de 2 Mo.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setAboutForm((prev) => ({
+        ...prev,
+        imageBase64: base64String,
+        imagePreview: base64String,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveAboutImage = () => {
+    setAboutForm((prev) => ({
+      ...prev,
+      imageBase64: null,
+      imagePreview: null,
+    }));
+  };
+
+  const handleUpdateAbout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsPending(true);
+    try {
+      const result = await updateAboutAction({
+        title: aboutForm.title,
+        content: aboutForm.content,
+        imageBase64: aboutForm.imageBase64 || undefined,
+      });
+      if (result.success) {
+        toast({
+          title: "Section À Propos mise à jour",
+          description: "La page À propos a été mise à jour avec succès.",
+        });
+        setAboutForm((prev) => ({ ...prev, imageBase64: null })); // reset base64 to avoid resending
+        router.refresh();
+      } else {
+        toast({
+          title: "Erreur",
+          description: result.error || "Une erreur est survenue.",
+          variant: "destructive",
+        });
+      }
+    } catch (e) {
+      toast({
+        title: "Erreur réseau",
+        description: "Impossible de contacter le serveur.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const handleUpdateService = async (e: React.FormEvent) => {
@@ -254,7 +371,15 @@ export default function DashboardClient({
     setIsPending(true);
 
     try {
-      const result = await updateServiceAction(editingService.id, serviceForm);
+      const payload = {
+        title: serviceForm.title,
+        description: serviceForm.description,
+        expertise: serviceForm.expertise,
+        bulletPoints: serviceForm.bulletPoints,
+        icon: serviceForm.icon,
+        imageBase64: serviceForm.imageBase64 || undefined,
+      };
+      const result = await updateServiceAction(editingService.id, payload);
       if (result.success) {
         toast({
           title: "Service mis à jour !",
@@ -601,6 +726,18 @@ export default function DashboardClient({
           <FileText className="w-4 h-4 mr-2" />
           Publications Blog
         </Button>
+
+        <Button
+          variant={activeTab === "about" ? "default" : "outline"}
+          onClick={() => {
+            setActiveTab("about");
+            setEditingService(null);
+          }}
+          className="flex-1 md:flex-none py-6 text-base"
+        >
+          <ExternalLink className="w-4 h-4 mr-2" />
+          À Propos
+        </Button>
       </div>
 
       {/* --- CONTENT AREA --- */}
@@ -699,6 +836,47 @@ export default function DashboardClient({
                         rows={2}
                         className="transition-smooth focus:border-accent resize-none"
                       />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Image du Service (Bannière)</Label>
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                        {serviceForm.imagePreview && (
+                          <div className="relative w-32 h-32 rounded-md overflow-hidden border border-border">
+                            <img src={serviceForm.imagePreview} alt="Aperçu" className="w-full h-full object-cover" />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute top-1 right-1 w-6 h-6"
+                              onClick={handleRemoveServiceImage}
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <Label
+                            htmlFor="s-image"
+                            className="flex items-center justify-center w-full h-32 border-2 border-dashed rounded-md cursor-pointer hover:border-accent hover:bg-accent/5 transition-smooth"
+                          >
+                            <div className="flex flex-col items-center space-y-2 text-muted-foreground">
+                              <Upload className="w-6 h-6" />
+                              <span className="text-sm font-medium">
+                                {serviceForm.imagePreview ? "Changer l'image" : "Ajouter une image"}
+                              </span>
+                              <span className="text-xs">Moins de 2 Mo</span>
+                            </div>
+                            <Input
+                              id="s-image"
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleServiceImageChange}
+                            />
+                          </Label>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Expertise Paragraphs */}
@@ -1282,6 +1460,95 @@ export default function DashboardClient({
               </div>
             )}
           </div>
+        )}
+
+        {/* TAB 5: A PROPOS */}
+        {activeTab === "about" && (
+          <Card className="shadow-medium border-border animate-in slide-in-from-bottom duration-500">
+            <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
+              <div>
+                <CardTitle className="text-2xl font-serif">Modifier : À Propos du Cabinet</CardTitle>
+                <CardDescription>
+                  Ces informations s'afficheront sur la page dédiée /about de votre site internet.
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <form onSubmit={handleUpdateAbout} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="a-title">Titre Principal</Label>
+                  <Input
+                    id="a-title"
+                    value={aboutForm.title}
+                    onChange={(e) => setAboutForm({ ...aboutForm, title: e.target.value })}
+                    required
+                    className="transition-smooth focus:border-accent"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Image de Couverture</Label>
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                    {aboutForm.imagePreview && (
+                      <div className="relative w-48 h-32 rounded-md overflow-hidden border border-border">
+                        <img src={aboutForm.imagePreview} alt="Aperçu À Propos" className="w-full h-full object-cover" />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-1 right-1 w-6 h-6"
+                          onClick={handleRemoveAboutImage}
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <Label
+                        htmlFor="a-image"
+                        className="flex items-center justify-center w-full h-32 border-2 border-dashed rounded-md cursor-pointer hover:border-accent hover:bg-accent/5 transition-smooth"
+                      >
+                        <div className="flex flex-col items-center space-y-2 text-muted-foreground">
+                          <Upload className="w-6 h-6" />
+                          <span className="text-sm font-medium">
+                            {aboutForm.imagePreview ? "Changer l'image" : "Ajouter une image"}
+                          </span>
+                          <span className="text-xs">Moins de 2 Mo</span>
+                        </div>
+                        <Input
+                          id="a-image"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleAboutImageChange}
+                        />
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="a-content">Contenu (Histoire, Vision, Valeurs...)</Label>
+                  <Textarea
+                    id="a-content"
+                    value={aboutForm.content}
+                    onChange={(e) => setAboutForm({ ...aboutForm, content: e.target.value })}
+                    required
+                    rows={15}
+                    className="transition-smooth focus:border-accent resize-none leading-relaxed"
+                  />
+                  <p className="text-xs text-muted-foreground">Les retours à la ligne seront respectés sur le site.</p>
+                </div>
+
+                <div className="flex gap-4 pt-6 border-t justify-end">
+                  <Button type="submit" disabled={isPending} className="bg-accent text-accent-foreground hover:bg-accent/90 px-6">
+                    {isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                    Enregistrer les modifications
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
         )}
       </div>
 
