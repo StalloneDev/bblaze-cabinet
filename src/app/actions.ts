@@ -25,7 +25,6 @@ export async function loginAdminAction(password: string): Promise<{ success: boo
     const cookieStore = await cookies();
     cookieStore.set("cabinet_admin_session", "true", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: "/",

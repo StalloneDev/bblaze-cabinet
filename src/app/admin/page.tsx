@@ -36,9 +36,11 @@ export default function AdminLoginPage() {
       if (result.success) {
         toast({
           title: "Connexion réussie !",
-          description: "Bienvenue dans votre espace d'administration.",
+          description: "Redirection vers votre espace d'administration...",
         });
-        window.location.href = "/admin/dashboard";
+        setTimeout(() => {
+          window.location.replace("/admin/dashboard");
+        }, 200);
       } else {
         toast({
           title: "Échec de connexion",
