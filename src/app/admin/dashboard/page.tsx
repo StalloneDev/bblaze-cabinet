@@ -51,7 +51,7 @@ export default async function AdminDashboardPage() {
         </div>
       </main>
 
-      <Footer />
+      <Footer contact={contact} />
     </div>
   );
 }

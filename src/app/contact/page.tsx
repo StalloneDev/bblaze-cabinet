@@ -124,7 +124,7 @@ export default async function ContactPage() {
         </div>
       </main>
 
-      <Footer />
+      <Footer contact={contact} />
     </div>
   );
 }

@@ -11,20 +11,7 @@ interface FooterProps {
   } | null;
 }
 
-const Footer = async ({ contact: propContact }: FooterProps = {}) => {
-  let contact = propContact;
-
-  if (!contact && typeof window === "undefined") {
-    try {
-      const { prisma } = await import("@/lib/prisma");
-      contact = await prisma.contactInfo.findFirst({
-        where: { id: "singleton" },
-      });
-    } catch {
-      contact = null;
-    }
-  }
-
+const Footer = ({ contact }: FooterProps = {}) => {
   // Fallbacks par défaut si non disponible
   const displayContact = {
     address: contact?.address || "Cotonou, Bénin",
