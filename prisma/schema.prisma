@@ -24,9 +24,11 @@ model AboutInfo {
 }
 
 model ContactInfo {
-  id             String @id @default("singleton")
+  id             String  @id @default("singleton")
   email          String
+  email2         String?
   phone          String
+  phone2         String?
   address        String
   whatsappNumber String
   whatsappMsg    String

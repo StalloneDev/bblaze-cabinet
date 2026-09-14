@@ -66,146 +66,121 @@ export default async function IndexPage() {
       <Header />
       <WhatsAppButton variant="floating" number={contact?.whatsappNumber} message={contact?.whatsappMsg} />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      {/* Hero Section + Blog Ticker */}
+      <section className="relative pt-28 pb-16 overflow-hidden min-h-[85vh] flex items-center">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/hero-law.jpg"
+          {/* Balise img standard pour affichage direct garanti et instantané */}
+          <img
+            src="/hero-background.jpg"
             alt="Cabinet BBLAZE - Justice et Droit"
-            fill
-            className="object-cover opacity-25 dark:opacity-15"
-            priority
-            quality={80}
+            className="w-full h-full object-cover object-center opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(var(--accent)/0.1),transparent_50%)]" />
+          {/* Overlay très léger (voile très subtil) pour préserver 100% de la visibilité de l'image de fond */}
+          <div className="dark:hidden absolute inset-0 bg-gradient-to-r from-white/70 via-white/35 to-transparent pointer-events-none" />
+          <div className="hidden dark:block absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/40 to-transparent pointer-events-none" />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <h1 className="text-5xl md:text-7xl font-serif font-bold text-foreground leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              Votre Partenaire Juridique
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/70 mt-2 animate-in fade-in duration-1000 delay-200">
-                d'Excellence
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150">
-              Expertise, confiance et accompagnement personnalisé pour tous vos besoins juridiques
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-              <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-medium hover:shadow-strong text-lg px-8 hover:scale-105 transition-smooth group">
-                <Link href="/contact">
-                  Demander un Service
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <WhatsAppButton number={contact?.whatsappNumber} message={contact?.whatsappMsg} />
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground text-lg px-8 hover:scale-105 transition-smooth"
-              >
-                <a href={`mailto:${contact?.email || "contact@bblaze.fr"}`}>Nous Contacter</a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Publications Récentes du Blog (Remplaçant l'ancienne section À Propos) */}
-      <section className="py-20 bg-cream/30 dark:bg-navy/20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,hsl(var(--accent)/0.05),transparent_50%)]" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-4 mb-16 animate-in fade-in duration-700">
-            <span className="text-xs font-bold uppercase tracking-wider text-accent px-3 py-1 rounded-full bg-accent/10">
-              Notre Blog d'Actualités
-            </span>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
-              Dernières Analyses & Actualités
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Décryptage de l'actualité juridique et conseils pratiques rédigés par nos experts pour sécuriser vos activités.
-            </p>
-          </div>
-
-          {recentPosts.length === 0 ? (
-            <Card className="text-center py-12 border-border shadow-soft bg-card/40 backdrop-blur-sm max-w-lg mx-auto">
-              <CardContent className="space-y-3 pt-6">
-                <FileText className="w-10 h-10 text-muted-foreground/35 mx-auto" />
-                <h3 className="text-lg font-serif font-bold">Aucun article publié</h3>
-                <p className="text-muted-foreground text-sm">
-                  Les publications d'actualités et d'analyses juridiques apparaîtront bientôt ici.
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {recentPosts.map((post) => (
-                <Card 
-                  key={post.id} 
-                  className="group hover:shadow-strong transition-smooth border-border hover:border-accent/40 bg-card/80 backdrop-blur-sm flex flex-col justify-between overflow-hidden"
+        <div className="container mx-auto px-6 relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left: Hero content — centré sur mobile, aligné à gauche sur desktop */}
+            <div className="lg:col-span-8 space-y-7 text-center lg:text-left">
+              <h1 className="text-4xl md:text-5xl xl:text-6xl font-serif font-bold text-foreground leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                Votre Partenaire Juridique
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/70 mt-2 animate-in fade-in duration-1000 delay-200">
+                  pour Sécuriser vos Activités
+                </span>
+              </h1>
+              <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150">
+                BBLAZE Conseil accompagne les entreprises, dirigeants, investisseurs et professionnels dans la maîtrise de leurs enjeux juridiques et la sécurisation de leurs opérations.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+                <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-medium hover:shadow-strong text-base px-6 hover:scale-105 transition-smooth group">
+                  <Link href="/contact">
+                    Demander un Service
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+                <WhatsAppButton number={contact?.whatsappNumber} message={contact?.whatsappMsg} />
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground text-base px-6 hover:scale-105 transition-smooth"
                 >
-                  <div className="space-y-4">
-                    {/* Bannière de couverture */}
-                    <div className="h-48 w-full relative overflow-hidden bg-muted">
-                      {post.imageUrl ? (
-                        <Image
-                          src={post.imageUrl}
-                          alt={post.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-smooth"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/5 flex items-center justify-center text-accent/30">
-                          <FileText className="w-10 h-10" />
-                        </div>
-                      )}
-                      
-                      {/* Badge catégorie */}
-                      <span className="absolute top-4 left-4 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-accent text-accent-foreground shadow-sm">
-                        {post.category}
-                      </span>
-                    </div>
-
-                    <div className="px-6 space-y-2">
-                      <span className="text-xs text-muted-foreground block">
-                        {new Date(post.createdAt).toLocaleDateString("fr-FR", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric"
-                        })}
-                      </span>
-                      <h3 className="text-lg font-serif font-bold text-foreground line-clamp-2 group-hover:text-accent transition-colors">
-                        {post.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-                        {post.content}
-                      </p>
-                    </div>
-                  </div>
-
-                  <CardContent className="pt-4 px-6 pb-6 mt-4">
-                    <Button asChild variant="ghost" className="group/btn w-full justify-between hover:bg-accent/5 hover:text-accent border border-transparent hover:border-accent/20 rounded-lg text-xs py-4">
-                      <Link href="/blog">
-                        <span className="font-semibold">Lire l'article</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-smooth" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+                  <a href={`mailto:${contact?.email || "contact@bblaze.fr"}`}>Nous Contacter</a>
+                </Button>
+              </div>
             </div>
-          )}
 
-          <div className="text-center mt-12">
-            <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-medium text-base px-8 transition-smooth">
-              <Link href="/blog">
-                Découvrir tout le blog
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
-            </Button>
+            {/* Right: Vertical scrolling blog ticker — réduit pour mieux équilibrer */}
+            <div className="lg:col-span-4 hidden lg:flex flex-col animate-in fade-in slide-in-from-right-8 duration-1000 delay-400">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-accent px-3 py-1 rounded-full bg-accent/10 border border-accent/20">
+                  Notre Blog d'Actualités
+                </span>
+                <Link href="/blog" className="text-xs text-muted-foreground hover:text-accent transition-colors ml-auto flex items-center gap-1">
+                  Tout voir <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+
+              {/* Ticker container */}
+              <div
+                className="relative rounded-2xl border border-border/50 bg-card/50 backdrop-blur-md overflow-hidden shadow-strong"
+                style={{ height: "340px" }}
+              >
+                {/* Top fade */}
+                <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-card/60 to-transparent z-10 pointer-events-none" />
+                {/* Bottom fade */}
+                <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-card/60 to-transparent z-10 pointer-events-none" />
+
+                {recentPosts.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-8">
+                    <FileText className="w-10 h-10 text-muted-foreground/30" />
+                    <p className="text-sm text-muted-foreground">Les actualités juridiques apparaîtront ici.</p>
+                  </div>
+                ) : (
+                  <div className="blog-ticker-track absolute top-0 left-0 right-0">
+                    {/* Duplicate posts for seamless loop */}
+                    {[...recentPosts, ...recentPosts, ...recentPosts].map((post, idx) => (
+                      <Link
+                        key={`${post.id}-${idx}`}
+                        href="/blog"
+                        className="group block p-4 border-b border-border/30 hover:bg-accent/5 transition-colors"
+                      >
+                        <div className="flex gap-3 items-start">
+                          {post.imageUrl ? (
+                            <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border border-border/40">
+                              <Image
+                                src={post.imageUrl}
+                                alt={post.title}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-smooth"
+                                sizes="64px"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-16 h-16 rounded-lg flex-shrink-0 bg-gradient-to-br from-primary/10 to-accent/5 flex items-center justify-center border border-border/40">
+                              <FileText className="w-5 h-5 text-accent/40" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-accent bg-accent/10 px-1.5 py-0.5 rounded">
+                              {post.category}
+                            </span>
+                            <h3 className="text-sm font-serif font-bold text-foreground line-clamp-2 mt-1 group-hover:text-accent transition-colors">
+                              {post.title}
+                            </h3>
+                            <span className="text-[11px] text-muted-foreground">
+                              {new Date(post.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>

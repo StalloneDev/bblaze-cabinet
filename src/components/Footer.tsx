@@ -1,8 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Scale, Mail, Phone, MapPin, ShieldAlert } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 
-const Footer = () => {
+const Footer = async () => {
+  const contact = await prisma.contactInfo.findFirst({
+    where: { id: "singleton" },
+  });
+
   const services = [
     { label: "Ingénierie Juridique", path: "/services/ingenierie-juridique" },
     { label: "Ressources Humaines", path: "/services/ressources-humaines" },
@@ -82,26 +87,46 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact — données depuis la BDD */}
           <div>
             <h4 className="text-lg font-semibold mb-4 font-serif">Contact</h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-primary-foreground/80">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>123 Avenue de la Justice, 75001 Paris</span>
-              </li>
-              <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
-                <Phone className="w-4 h-4 flex-shrink-0" />
-                <a href="tel:+33123456789" className="hover:text-accent transition-smooth">
-                  +33 1 23 45 67 89
-                </a>
-              </li>
-              <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
-                <Mail className="w-4 h-4 flex-shrink-0" />
-                <a href="mailto:contact@bblaze.fr" className="hover:text-accent transition-smooth">
-                  contact@bblaze.fr
-                </a>
-              </li>
+              {(contact?.address) && (
+                <li className="flex items-start gap-2 text-sm text-primary-foreground/80">
+                  <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span>{contact.address}</span>
+                </li>
+              )}
+              {(contact?.phone) && (
+                <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                  <Phone className="w-4 h-4 flex-shrink-0" />
+                  <div className="flex flex-col gap-0.5">
+                    <a href={`tel:${contact.phone}`} className="hover:text-accent transition-smooth">
+                      {contact.phone}
+                    </a>
+                    {contact.phone2 && (
+                      <a href={`tel:${contact.phone2}`} className="hover:text-accent transition-smooth">
+                        {contact.phone2}
+                      </a>
+                    )}
+                  </div>
+                </li>
+              )}
+              {(contact?.email) && (
+                <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                  <Mail className="w-4 h-4 flex-shrink-0" />
+                  <div className="flex flex-col gap-0.5">
+                    <a href={`mailto:${contact.email}`} className="hover:text-accent transition-smooth">
+                      {contact.email}
+                    </a>
+                    {contact.email2 && (
+                      <a href={`mailto:${contact.email2}`} className="hover:text-accent transition-smooth">
+                        {contact.email2}
+                      </a>
+                    )}
+                  </div>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -110,8 +135,8 @@ const Footer = () => {
           <p className="text-sm text-primary-foreground/60">
             © {new Date().getFullYear()} BBLAZE. Tous droits réservés.
           </p>
-          <Link 
-            href="/admin" 
+          <Link
+            href="/admin"
             className="flex items-center gap-1.5 text-xs text-primary-foreground/45 hover:text-accent transition-smooth"
           >
             <ShieldAlert className="w-3.5 h-3.5" />

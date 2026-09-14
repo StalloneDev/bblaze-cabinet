@@ -179,7 +179,9 @@ export default function DashboardClient({
   // --- ÉTAT ET TRANSMISSION : COORDONNÉES ---
   const [contactData, setContactData] = useState({
     email: initialContact?.email || "contact@bblaze.fr",
+    email2: initialContact?.email2 || "",
     phone: initialContact?.phone || "+33 1 23 45 67 89",
+    phone2: initialContact?.phone2 || "",
     address: initialContact?.address || "123 Avenue de la Justice, 75001 Paris",
     whatsappNumber: initialContact?.whatsappNumber || "+33123456789",
     whatsappMsg: initialContact?.whatsappMsg || "Bonjour, je souhaite obtenir des informations sur vos services.",
@@ -973,7 +975,7 @@ export default function DashboardClient({
               <form onSubmit={handleUpdateContact} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="c-email">E-mail officiel</Label>
+                    <Label htmlFor="c-email">E-mail principal</Label>
                     <Input
                       id="c-email"
                       type="email"
@@ -985,12 +987,35 @@ export default function DashboardClient({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="c-phone">Numéro de Téléphone</Label>
+                    <Label htmlFor="c-email2">E-mail secondaire <span className="text-muted-foreground text-xs">(optionnel)</span></Label>
+                    <Input
+                      id="c-email2"
+                      type="email"
+                      value={contactData.email2}
+                      onChange={(e) => setContactData({ ...contactData, email2: e.target.value })}
+                      placeholder="Ex: contact2@cabinet.fr"
+                      className="transition-smooth focus:border-accent"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="c-phone">Téléphone principal</Label>
                     <Input
                       id="c-phone"
                       value={contactData.phone}
                       onChange={(e) => setContactData({ ...contactData, phone: e.target.value })}
                       required
+                      className="transition-smooth focus:border-accent"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="c-phone2">Téléphone secondaire <span className="text-muted-foreground text-xs">(optionnel)</span></Label>
+                    <Input
+                      id="c-phone2"
+                      value={contactData.phone2}
+                      onChange={(e) => setContactData({ ...contactData, phone2: e.target.value })}
+                      placeholder="Ex: +33 6 00 00 00 01"
                       className="transition-smooth focus:border-accent"
                     />
                   </div>

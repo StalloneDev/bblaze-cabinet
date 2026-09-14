@@ -49,7 +49,9 @@ export async function checkAdminAuth(): Promise<boolean> {
 // 2. Gestion du Contact
 export async function updateContactAction(data: {
   email: string;
+  email2?: string;
   phone: string;
+  phone2?: string;
   address: string;
   whatsappNumber: string;
   whatsappMsg: string;
