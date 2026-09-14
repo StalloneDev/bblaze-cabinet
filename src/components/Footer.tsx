@@ -1,12 +1,38 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Scale, Mail, Phone, MapPin, ShieldAlert } from "lucide-react";
-import { prisma } from "@/lib/prisma";
+interface FooterProps {
+  contact?: {
+    email?: string;
+    email2?: string | null;
+    phone?: string;
+    phone2?: string | null;
+    address?: string;
+  } | null;
+}
 
-const Footer = async () => {
-  const contact = await prisma.contactInfo.findFirst({
-    where: { id: "singleton" },
-  });
+const Footer = async ({ contact: propContact }: FooterProps = {}) => {
+  let contact = propContact;
+
+  if (!contact && typeof window === "undefined") {
+    try {
+      const { prisma } = await import("@/lib/prisma");
+      contact = await prisma.contactInfo.findFirst({
+        where: { id: "singleton" },
+      });
+    } catch {
+      contact = null;
+    }
+  }
+
+  // Fallbacks par défaut si non disponible
+  const displayContact = {
+    address: contact?.address || "Cotonou, Bénin",
+    phone: contact?.phone || "+229 01 00 00 00",
+    phone2: contact?.phone2,
+    email: contact?.email || "contact@bblaze.fr",
+    email2: contact?.email2,
+  };
 
   const services = [
     { label: "Ingénierie Juridique", path: "/services/ingenierie-juridique" },
@@ -87,41 +113,41 @@ const Footer = async () => {
             </ul>
           </div>
 
-          {/* Contact — données depuis la BDD */}
+          {/* Contact — données depuis la BDD ou fallbacks */}
           <div>
             <h4 className="text-lg font-semibold mb-4 font-serif">Contact</h4>
             <ul className="space-y-3">
-              {(contact?.address) && (
+              {displayContact.address && (
                 <li className="flex items-start gap-2 text-sm text-primary-foreground/80">
                   <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span>{contact.address}</span>
+                  <span>{displayContact.address}</span>
                 </li>
               )}
-              {(contact?.phone) && (
+              {displayContact.phone && (
                 <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
                   <Phone className="w-4 h-4 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
-                    <a href={`tel:${contact.phone}`} className="hover:text-accent transition-smooth">
-                      {contact.phone}
+                    <a href={`tel:${displayContact.phone}`} className="hover:text-accent transition-smooth">
+                      {displayContact.phone}
                     </a>
-                    {contact.phone2 && (
-                      <a href={`tel:${contact.phone2}`} className="hover:text-accent transition-smooth">
-                        {contact.phone2}
+                    {displayContact.phone2 && (
+                      <a href={`tel:${displayContact.phone2}`} className="hover:text-accent transition-smooth">
+                        {displayContact.phone2}
                       </a>
                     )}
                   </div>
                 </li>
               )}
-              {(contact?.email) && (
+              {displayContact.email && (
                 <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
                   <Mail className="w-4 h-4 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
-                    <a href={`mailto:${contact.email}`} className="hover:text-accent transition-smooth">
-                      {contact.email}
+                    <a href={`mailto:${displayContact.email}`} className="hover:text-accent transition-smooth">
+                      {displayContact.email}
                     </a>
-                    {contact.email2 && (
-                      <a href={`mailto:${contact.email2}`} className="hover:text-accent transition-smooth">
-                        {contact.email2}
+                    {displayContact.email2 && (
+                      <a href={`mailto:${displayContact.email2}`} className="hover:text-accent transition-smooth">
+                        {displayContact.email2}
                       </a>
                     )}
                   </div>

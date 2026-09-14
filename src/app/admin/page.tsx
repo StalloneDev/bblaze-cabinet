@@ -38,8 +38,7 @@ export default function AdminLoginPage() {
           title: "Connexion réussie !",
           description: "Bienvenue dans votre espace d'administration.",
         });
-        router.push("/admin/dashboard");
-        router.refresh();
+        window.location.href = "/admin/dashboard";
       } else {
         toast({
           title: "Échec de connexion",
