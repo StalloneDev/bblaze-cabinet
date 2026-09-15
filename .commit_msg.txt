@@ -1,9 +1,0 @@
-fix: correction erreur mise a jour publication blog
-
-- Correction de la gestion de l image lors de la suppression
-  (imageBase64 REMOVE -> null en BDD au lieu de chaine vide)
-- Suppression du code orphelin duplique dans actions.ts
-- Augmentation limite body des Server Actions a 5mb
-  pour eviter l erreur impossible de contacter le serveur
-  lors de l upload d images en base64
-- Logique claire : undefined=pas de changement, vide=supprimer, base64=nouvelle image
