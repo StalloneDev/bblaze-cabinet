@@ -13,6 +13,7 @@ import {
   Clock,
   ChevronRight,
   ChevronLeft,
+  Pencil,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -140,7 +141,7 @@ export default function BlogClient({ initialPosts, isAdmin }: BlogClientProps) {
                 return (
                   <Card
                     key={post.id}
-                    className="flex flex-col border-none shadow-soft hover:shadow-strong transition-smooth hover:scale-[1.02] overflow-hidden bg-card/80 backdrop-blur-sm relative"
+                    className="flex flex-col border-none shadow-soft hover:shadow-strong transition-smooth hover:scale-[1.02] overflow-hidden bg-card/80 backdrop-blur-sm relative group/card"
                   >
                     {/* Category Badge on top of image */}
                     <span className="absolute top-4 left-4 z-10 bg-background/90 backdrop-blur-sm text-foreground text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
@@ -148,12 +149,25 @@ export default function BlogClient({ initialPosts, isAdmin }: BlogClientProps) {
                       {cat.label}
                     </span>
 
+                    {/* Admin edit icon */}
+                    {isAdmin && (
+                      <Link
+                        href="/admin/dashboard"
+                        className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-background/90 backdrop-blur-sm shadow-sm flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity hover:bg-accent hover:text-accent-foreground"
+                        title="Modifier cet article"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </Link>
+                    )}
+
                     {/* Post Image (Base64) */}
                     {post.imageUrl ? (
                       <div className="h-52 w-full overflow-hidden relative bg-muted flex items-center justify-center">
                         <img
                           src={post.imageUrl}
                           alt={post.title}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover transition-smooth hover:scale-110"
                         />
                       </div>

@@ -200,10 +200,53 @@ export async function deletePostAction(id: number): Promise<{ success: boolean; 
       where: { id },
     });
     revalidatePath("/blog");
+    revalidatePath(`/blog/${id}`);
+    revalidatePath("/admin/dashboard");
     return { success: true };
   } catch (error) {
     console.error(error);
     return { success: false, error: "Erreur lors de la suppression de l'article" };
+  }
+}
+
+export async function updatePostAction(
+  id: number,
+  data: {
+    title: string;
+    content: string;
+    category?: string;
+    imageBase64?: string;
+  }
+): Promise<{ success: boolean; error?: string }> {
+  const isAuth = await checkAdminAuth();
+  if (!isAuth) return { success: false, error: "Non autorisé" };
+
+  if (!data.title.trim() || !data.content.trim()) {
+    return { success: false, error: "Le titre et le contenu sont obligatoires." };
+  }
+
+  try {
+    const updateData: any = {
+      title: data.title,
+      content: data.content,
+      category: data.category || "Actu",
+    };
+
+    if (data.imageBase64 !== undefined) {
+      updateData.imageUrl = data.imageBase64;
+    }
+
+    await prisma.post.update({
+      where: { id },
+      data: updateData,
+    });
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${id}`);
+    revalidatePath("/admin/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Erreur lors de la modification de l'article" };
   }
 }
 

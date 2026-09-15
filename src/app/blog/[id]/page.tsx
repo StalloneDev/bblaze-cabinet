@@ -126,6 +126,8 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <img
                   src={post.imageUrl}
                   alt={post.title}
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -201,6 +203,8 @@ export default async function BlogPostPage({ params }: PageProps) {
                         <img 
                           src={relatedPost.imageUrl} 
                           alt={relatedPost.title}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
                         />
                       </div>

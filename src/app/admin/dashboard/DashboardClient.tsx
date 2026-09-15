@@ -57,6 +57,7 @@ import {
   updateContactAction,
   updateServiceAction,
   deletePostAction,
+  updatePostAction,
   deleteContactMessageAction,
   createPostAction,
   toggleMessageReadAction,
@@ -532,6 +533,93 @@ export default function DashboardClient({
     imageBase64: null,
     imagePreview: null,
   });
+
+  // --- ÉTAT ET TRANSMISSION : ÉDITION POST EXISTANT ---
+  const [editingPost, setEditingPost] = useState<any | null>(null);
+  const [editPostForm, setEditPostForm] = useState<{
+    title: string;
+    content: string;
+    category: string;
+    imageBase64: string | null;
+    imagePreview: string | null;
+  }>({
+    title: "",
+    content: "",
+    category: "Actu",
+    imageBase64: null,
+    imagePreview: null,
+  });
+
+  const handleStartEditPost = (post: any) => {
+    setEditingPost(post);
+    setEditPostForm({
+      title: post.title,
+      content: post.content,
+      category: post.category || "Actu",
+      imageBase64: null,
+      imagePreview: post.imageUrl || null,
+    });
+    setIsCreatingPost(false);
+  };
+
+  const handleEditPostImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "Image trop volumineuse",
+        description: "Veuillez sélectionner une image de moins de 2 Mo.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setEditPostForm((prev) => ({ ...prev, imageBase64: base64String, imagePreview: base64String }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveEditPostImage = () => {
+    setEditPostForm((prev) => ({ ...prev, imageBase64: "", imagePreview: null }));
+  };
+
+  const handleUpdatePostSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPost) return;
+    if (!editPostForm.title.trim() || !editPostForm.content.trim()) {
+      toast({
+        title: "Champs requis",
+        description: "Veuillez remplir le titre et le contenu.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsPending(true);
+    try {
+      const result = await updatePostAction(editingPost.id, {
+        title: editPostForm.title,
+        content: editPostForm.content,
+        category: editPostForm.category,
+        imageBase64: editPostForm.imageBase64 !== null ? editPostForm.imageBase64 : undefined,
+      });
+      if (result.success) {
+        toast({
+          title: "Article mis à jour !",
+          description: `"${editPostForm.title}" a bien été modifié.`,
+        });
+        setEditingPost(null);
+        router.refresh();
+      } else {
+        toast({ title: "Erreur", description: result.error || "Une erreur est survenue.", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Erreur réseau", description: "Impossible de contacter le serveur.", variant: "destructive" });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -1304,10 +1392,12 @@ export default function DashboardClient({
               <div>
                 <h3 className="text-xl font-serif font-bold">Gestion des Publications Blog</h3>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Publiez de nouveaux articles ou supprimez ceux existants.
+                  {editingPost
+                    ? `Modification de l'article : ${editingPost.title}`
+                    : "Publiez de nouveaux articles, modifiez ou supprimez ceux existants."}
                 </p>
               </div>
-              {!isCreatingPost && (
+              {!isCreatingPost && !editingPost && (
                 <Button
                   onClick={() => setIsCreatingPost(true)}
                   className="bg-accent text-accent-foreground hover:bg-accent/90 flex items-center gap-2 shadow-sm"
@@ -1318,7 +1408,119 @@ export default function DashboardClient({
               )}
             </div>
 
-            {isCreatingPost ? (
+            {/* FORMULAIRE ÉDITION POST EXISTANT */}
+            {editingPost ? (
+              <Card className="shadow-medium border-border animate-in slide-in-from-bottom duration-500">
+                <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
+                  <div>
+                    <CardTitle className="text-2xl font-serif">Modifier l'article</CardTitle>
+                    <CardDescription>
+                      Les modifications seront immédiatement visibles sur le blog public.
+                    </CardDescription>
+                  </div>
+                  <Button variant="ghost" onClick={() => setEditingPost(null)}>
+                    Annuler
+                  </Button>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <form onSubmit={handleUpdatePostSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-post-title">Titre de la publication *</Label>
+                      <Input
+                        id="edit-post-title"
+                        type="text"
+                        placeholder="Ex: Analyse de la nouvelle réglementation..."
+                        value={editPostForm.title}
+                        onChange={(e) => setEditPostForm({ ...editPostForm, title: e.target.value })}
+                        required
+                        maxLength={150}
+                        className="transition-smooth focus:border-accent"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Image de couverture (Max 2 Mo)</Label>
+                      {editPostForm.imagePreview ? (
+                        <div className="relative border border-border rounded-lg overflow-hidden h-60 bg-muted flex items-center justify-center">
+                          <img src={editPostForm.imagePreview} alt="Aperçu" className="w-full h-full object-cover" />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={handleRemoveEditPostImage}
+                            className="absolute top-3 right-3 shadow-md w-8 h-8 rounded-full hover:scale-105"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="border-2 border-dashed border-border hover:border-accent/40 rounded-lg p-8 text-center bg-card/30 transition-smooth group cursor-pointer relative">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleEditPostImageChange}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          />
+                          <div className="space-y-3">
+                            <div className="p-3 rounded-full bg-accent/5 w-fit mx-auto group-hover:scale-110 transition-bounce">
+                              <Upload className="w-6 h-6 text-accent" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="font-medium text-sm">Cliquez pour téléverser une nouvelle image</p>
+                              <p className="text-xs text-muted-foreground">PNG, JPG ou WEBP jusqu'à 2 Mo</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-post-category">Catégorie *</Label>
+                      <select
+                        id="edit-post-category"
+                        value={editPostForm.category}
+                        onChange={(e) => setEditPostForm({ ...editPostForm, category: e.target.value })}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-smooth focus:border-accent"
+                        required
+                      >
+                        <option value="Actu">Actualités (Général)</option>
+                        <option value="Juridique">Ingénierie Juridique</option>
+                        <option value="RH">Ressources Humaines</option>
+                        <option value="Commerce">Commerce International</option>
+                        <option value="Mediation">Médiation &amp; Recouvrement</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-post-content">Contenu de la publication *</Label>
+                      <Textarea
+                        id="edit-post-content"
+                        placeholder="Saisissez votre texte d'analyse juridique, actualité..."
+                        value={editPostForm.content}
+                        onChange={(e) => setEditPostForm({ ...editPostForm, content: e.target.value })}
+                        required
+                        rows={10}
+                        maxLength={5000}
+                        className="transition-smooth focus:border-accent resize-none leading-relaxed"
+                      />
+                      <div className="flex justify-end">
+                        <p className="text-xs text-muted-foreground">{editPostForm.content.length}/5000 caractères</p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4 pt-6 border-t justify-end">
+                      <Button type="button" variant="outline" onClick={() => setEditingPost(null)}>
+                        Annuler
+                      </Button>
+                      <Button type="submit" disabled={isPending} className="bg-accent text-accent-foreground hover:bg-accent/90 px-6">
+                        {isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Edit2 className="w-4 h-4 mr-2" />}
+                        Enregistrer les modifications
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            ) : isCreatingPost ? (
               <Card className="shadow-medium border-border animate-in slide-in-from-bottom duration-500">
                 <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
                   <div>
@@ -1466,16 +1668,26 @@ export default function DashboardClient({
                     </div>
                     
                     <div className="flex items-center gap-2 shrink-0">
-                      <Button asChild size="icon" variant="ghost" className="text-accent hover:bg-accent/10">
-                        <a href="/blog" target="_blank">
+                      <Button asChild size="icon" variant="ghost" className="text-accent hover:bg-accent/10" title="Voir sur le blog">
+                        <a href={`/blog/${post.id}`} target="_blank">
                           <ExternalLink className="w-4 h-4" />
                         </a>
                       </Button>
                       <Button
                         size="icon"
                         variant="ghost"
+                        title="Modifier l'article"
+                        onClick={() => handleStartEditPost(post)}
+                        className="text-accent hover:bg-accent/10 hover:scale-110 transition-smooth"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
                         onClick={() => handleDeletePost(post.id)}
                         className="text-destructive hover:bg-destructive/10"
+                        title="Supprimer l'article"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
