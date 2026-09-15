@@ -1501,7 +1501,8 @@ export default function DashboardClient({
                         <option value="Juridique">Ingénierie Juridique</option>
                         <option value="RH">Ressources Humaines</option>
                         <option value="Commerce">Commerce International</option>
-                        <option value="Mediation">Médiation &amp; Recouvrement</option>
+                        <option value="Mediation">Médiation</option>
+                        <option value="Recouvrement">Recouvrement</option>
                       </select>
                     </div>
 
@@ -1612,7 +1613,8 @@ export default function DashboardClient({
                         <option value="Juridique">Ingénierie Juridique</option>
                         <option value="RH">Ressources Humaines</option>
                         <option value="Commerce">Commerce International</option>
-                        <option value="Mediation">Médiation & Recouvrement</option>
+                        <option value="Mediation">Médiation</option>
+                        <option value="Recouvrement">Recouvrement</option>
                       </select>
                     </div>
 

@@ -36,7 +36,8 @@ const categories = [
   { id: "Juridique", label: "Ingénierie Juridique", emoji: "⚖️" },
   { id: "RH", label: "Ressources Humaines", emoji: "👥" },
   { id: "Commerce", label: "Commerce International", emoji: "🌐" },
-  { id: "Mediation", label: "Médiation & Recouvrement", emoji: "🤝" },
+  { id: "Mediation", label: "Médiation", emoji: "🤝" },
+  { id: "Recouvrement", label: "Recouvrement", emoji: "💶" },
   { id: "Actu", label: "Actualités", emoji: "📰" },
 ];
 
