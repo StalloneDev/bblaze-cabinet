@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Globe } from "lucide-react";
+import { Globe, Check } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,11 +17,40 @@ declare global {
   }
 }
 
+const LANGUAGES = [
+  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "pt", label: "Português", flag: "🇵🇹" },
+  { code: "de", label: "Deutsch", flag: "🇩🇪" },
+  { code: "ar", label: "العربية", flag: "🇸🇦" },
+];
+
 export default function GoogleTranslate() {
   const [mounted, setMounted] = useState(false);
+  const [currentLang, setCurrentLang] = useState("fr");
+
+  // Détecter la langue active depuis les cookies
+  const getActiveLanguage = () => {
+    if (typeof document === "undefined") return "fr";
+    const cookies = document.cookie.split(";");
+    for (const cookie of cookies) {
+      const [name, val] = cookie.trim().split("=");
+      if (name === "googtrans" && val) {
+        const parts = val.split("/");
+        const lang = parts[parts.length - 1];
+        if (lang && LANGUAGES.some((l) => l.code === lang)) {
+          return lang;
+        }
+      }
+    }
+    return "fr";
+  };
 
   useEffect(() => {
     setMounted(true);
+    const active = getActiveLanguage();
+    setCurrentLang(active);
 
     if (!document.getElementById("google-translate-script")) {
       const script = document.createElement("script");
@@ -47,57 +76,71 @@ export default function GoogleTranslate() {
   }, []);
 
   const changeLanguage = (langCode: string) => {
+    if (langCode === currentLang) return;
+
+    setCurrentLang(langCode);
+
+    // Mettre à jour les cookies de traduction Google
+    const domain = window.location.hostname;
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain};`;
+
+    if (langCode !== "fr") {
+      const val = `/fr/${langCode}`;
+      document.cookie = `googtrans=${val}; path=/;`;
+      document.cookie = `googtrans=${val}; path=/; domain=${domain};`;
+    }
+
+    // Déclencher l'événement si le widget est prêt
     const select = document.querySelector(".goog-te-combo") as HTMLSelectElement;
     if (select) {
       select.value = langCode;
       select.dispatchEvent(new Event("change"));
-    } else {
-      // Fallback avec cookie Google Translate
-      document.cookie = `googtrans=/fr/${langCode}; path=/; domain=${window.location.hostname}`;
-      document.cookie = `googtrans=/fr/${langCode}; path=/`;
-      window.location.reload();
     }
+
+    // Recharger doucement la page pour appliquer la traduction complète et persistance
+    window.location.reload();
   };
 
   if (!mounted) return null;
 
+  const activeObj = LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0];
+
   return (
     <div className="relative flex items-center">
-      {/* Element caché d'initialisation Google Translate */}
+      {/* Conteneur masqué pour l'élément Google Translate */}
       <div id="google_translate_element" className="hidden" />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
-            className="w-9 h-9 rounded-lg border border-border bg-card/60 hover:bg-accent/10 hover:text-accent hover:border-accent/40 transition-smooth"
-            title="Traduire le site / Change language"
+            size="sm"
+            className="h-9 px-2.5 gap-1.5 rounded-lg border border-border bg-card/60 hover:bg-accent/10 hover:text-accent hover:border-accent/40 transition-smooth text-xs font-semibold"
+            title="Changer de langue / Change language"
           >
-            <Globe className="w-4 h-4" />
-            <span className="sr-only">Changer de langue</span>
+            <Globe className="w-4 h-4 text-accent" />
+            <span>{activeObj.flag}</span>
+            <span className="uppercase font-bold tracking-wider">{activeObj.code}</span>
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-44 bg-card border-border shadow-strong z-[100]">
-          <DropdownMenuItem onClick={() => changeLanguage("fr")} className="flex items-center gap-2.5 cursor-pointer text-sm font-medium">
-            <span className="text-base">🇫🇷</span> Français
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => changeLanguage("en")} className="flex items-center gap-2.5 cursor-pointer text-sm font-medium">
-            <span className="text-base">🇬🇧</span> English
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => changeLanguage("es")} className="flex items-center gap-2.5 cursor-pointer text-sm font-medium">
-            <span className="text-base">🇪🇸</span> Español
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => changeLanguage("pt")} className="flex items-center gap-2.5 cursor-pointer text-sm font-medium">
-            <span className="text-base">🇵🇹</span> Português
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => changeLanguage("de")} className="flex items-center gap-2.5 cursor-pointer text-sm font-medium">
-            <span className="text-base">🇩🇪</span> Deutsch
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => changeLanguage("ar")} className="flex items-center gap-2.5 cursor-pointer text-sm font-medium">
-            <span className="text-base">🇸🇦</span> العربية
-          </DropdownMenuItem>
+          {LANGUAGES.map((lang) => (
+            <DropdownMenuItem
+              key={lang.code}
+              onClick={() => changeLanguage(lang.code)}
+              className={`flex items-center justify-between cursor-pointer text-sm font-medium ${
+                currentLang === lang.code ? "bg-accent/15 text-accent font-bold" : ""
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="text-base">{lang.flag}</span>
+                <span>{lang.label}</span>
+              </div>
+              {currentLang === lang.code && <Check className="w-4 h-4 text-accent" />}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
