@@ -22,7 +22,8 @@ export default async function AboutPage() {
 
   const title = about?.title || "Notre Histoire et Notre Vision";
   const content = about?.content || "Nous sommes un cabinet dédié à l'excellence. \n\nNotre mission est de vous accompagner dans tous vos défis juridiques avec professionnalisme et rigueur.";
-  const imageUrl = about?.imageUrl || "https://bblaze-cabinet-f7zk.vercel.app/hero-law.jpg";
+  const imageUrl = about?.imageUrl || "/hero-law.jpg";
+
 
   // Formatter le texte pour gérer les retours à la ligne
   const formattedContent = content.split('\n').map((paragraph, idx) => (

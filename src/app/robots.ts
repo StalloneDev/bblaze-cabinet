@@ -9,6 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin", "/admin/dashboard"],
       },
     ],
-    sitemap: "https://bblaze-cabinet-f7zk.vercel.app/sitemap.xml",
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cabinetbblaze.com"}/sitemap.xml`,
   };
 }
+

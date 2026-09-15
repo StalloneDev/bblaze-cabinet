@@ -33,8 +33,8 @@ export async function generateMetadata(
   const title = `${post.title} | BBLAZE`;
   const description = post.content.substring(0, 160) + "...";
   
-  // Utiliser l'image de couverture ou une image par défaut (logo)
-  const imageUrl = post.imageUrl || "https://bblaze-cabinet-f7zk.vercel.app/hero-law.jpg";
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://cabinetbblaze.com";
+  const imageUrl = post.imageUrl || `${SITE_URL}/hero-law.jpg`;
 
   return {
     title,
@@ -42,7 +42,7 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      url: `https://bblaze-cabinet-f7zk.vercel.app/blog/${id}`,
+      url: `${SITE_URL}/blog/${id}`,
       siteName: "Cabinet BBLAZE",
       images: [
         {
@@ -104,7 +104,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   });
 
   // URL canonique pour le partage
-  const currentUrl = `https://bblaze-cabinet-f7zk.vercel.app/blog/${post.id}`;
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://cabinetbblaze.com";
+  const currentUrl = `${SITE_URL}/blog/${post.id}`;
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

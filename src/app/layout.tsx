@@ -13,15 +13,17 @@ const playfair = Playfair_Display({
   variable: "--font-serif",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://cabinetbblaze.com";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bblaze-cabinet-f7zk.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: "BBLAZE - Cabinet Conseil & Expertise Juridique",
   description: "BBLAZE est un cabinet de conseil et de droit spécialisé en ingénierie juridique, ressources humaines, commerce international, recouvrement, médiation et formations. Votre partenaire de confiance.",
   authors: [{ name: "BBLAZE" }],
   openGraph: {
     title: "BBLAZE - Cabinet Conseil & Expertise Juridique",
     description: "BBLAZE est un cabinet de conseil et de droit spécialisé en ingénierie juridique, ressources humaines, commerce international, recouvrement, médiation et formations. Votre partenaire de confiance.",
-    url: "https://bblaze-cabinet-f7zk.vercel.app",
+    url: SITE_URL,
     siteName: "BBLAZE",
     images: [
       {
