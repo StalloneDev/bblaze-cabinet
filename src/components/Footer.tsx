@@ -30,6 +30,11 @@ const Footer = ({ contact }: FooterProps = {}) => {
     { label: "Formations", path: "/services/formations" },
   ];
 
+  const getWhatsappUrl = (phoneStr: string) => {
+    const digits = phoneStr.replace(/\D/g, "");
+    return `https://wa.me/${digits}`;
+  };
+
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-10">
@@ -114,11 +119,23 @@ const Footer = ({ contact }: FooterProps = {}) => {
                 <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
                   <Phone className="w-4 h-4 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
-                    <a href={`tel:${displayContact.phone}`} className="hover:text-accent transition-smooth">
+                    <a
+                      href={getWhatsappUrl(displayContact.phone)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-accent transition-smooth flex items-center gap-1"
+                      title="Ouvrir sur WhatsApp"
+                    >
                       {displayContact.phone}
                     </a>
                     {displayContact.phone2 && (
-                      <a href={`tel:${displayContact.phone2}`} className="hover:text-accent transition-smooth">
+                      <a
+                        href={getWhatsappUrl(displayContact.phone2)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-accent transition-smooth flex items-center gap-1"
+                        title="Ouvrir sur WhatsApp"
+                      >
                         {displayContact.phone2}
                       </a>
                     )}
@@ -129,13 +146,21 @@ const Footer = ({ contact }: FooterProps = {}) => {
                 <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
                   <Mail className="w-4 h-4 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
-                    <a href={`mailto:${displayContact.email}`} className="hover:text-accent transition-smooth">
+                    <Link
+                      href="/contact"
+                      className="hover:text-accent transition-smooth"
+                      title="Aller à la page contact"
+                    >
                       {displayContact.email}
-                    </a>
+                    </Link>
                     {displayContact.email2 && (
-                      <a href={`mailto:${displayContact.email2}`} className="hover:text-accent transition-smooth">
+                      <Link
+                        href="/contact"
+                        className="hover:text-accent transition-smooth"
+                        title="Aller à la page contact"
+                      >
                         {displayContact.email2}
-                      </a>
+                      </Link>
                     )}
                   </div>
                 </li>

@@ -116,7 +116,7 @@ export default async function IndexPage() {
             <div className="lg:col-span-4 hidden lg:flex flex-col animate-in fade-in slide-in-from-right-8 duration-1000 delay-400">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold uppercase tracking-wider text-accent px-3 py-1 rounded-full bg-accent/10 border border-accent/20">
-                  Notre Blog d'Actualités
+                  PUBLICATIONS
                 </span>
                 <Link href="/blog" className="text-xs text-muted-foreground hover:text-accent transition-colors ml-auto flex items-center gap-1">
                   Tout voir <ArrowRight className="w-3 h-3" />
