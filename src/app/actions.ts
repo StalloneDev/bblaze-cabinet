@@ -232,8 +232,11 @@ export async function updatePostAction(
       category: data.category || "Actu",
     };
 
+    // undefined = ne pas toucher à l'image existante
+    // "" (chaîne vide) = supprimer l'image (mettre null)
+    // string non vide = nouvelle image base64
     if (data.imageBase64 !== undefined) {
-      updateData.imageUrl = data.imageBase64;
+      updateData.imageUrl = data.imageBase64 === "" ? null : data.imageBase64;
     }
 
     await prisma.post.update({
@@ -245,7 +248,7 @@ export async function updatePostAction(
     revalidatePath("/admin/dashboard");
     return { success: true };
   } catch (error) {
-    console.error(error);
+    console.error("updatePostAction error:", error);
     return { success: false, error: "Erreur lors de la modification de l'article" };
   }
 }

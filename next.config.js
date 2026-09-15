@@ -9,7 +9,11 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
   },
+
   headers: async () => [
     {
       source: "/(.*)",

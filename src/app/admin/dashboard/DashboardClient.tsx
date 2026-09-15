@@ -582,7 +582,8 @@ export default function DashboardClient({
   };
 
   const handleRemoveEditPostImage = () => {
-    setEditPostForm((prev) => ({ ...prev, imageBase64: "", imagePreview: null }));
+    // On utilise null pour signaler "supprimer l'image" (distinction avec undefined = "ne pas changer")
+    setEditPostForm((prev) => ({ ...prev, imageBase64: "REMOVE", imagePreview: null }));
   };
 
   const handleUpdatePostSubmit = async (e: React.FormEvent) => {
@@ -598,11 +599,24 @@ export default function DashboardClient({
     }
     setIsPending(true);
     try {
+      // imageBase64 logic:
+      //  - null  = pas de changement (garder l'image existante)
+      //  - "REMOVE" = supprimer l'image (mettre null en BDD)
+      //  - string base64 = nouvelle image
+      let imageBase64Payload: string | undefined;
+      if (editPostForm.imageBase64 === "REMOVE") {
+        imageBase64Payload = ""; // chaine vide = effacer en BDD
+      } else if (editPostForm.imageBase64 !== null) {
+        imageBase64Payload = editPostForm.imageBase64; // nouvelle image base64
+      } else {
+        imageBase64Payload = undefined; // pas de changement
+      }
+
       const result = await updatePostAction(editingPost.id, {
         title: editPostForm.title,
         content: editPostForm.content,
         category: editPostForm.category,
-        imageBase64: editPostForm.imageBase64 !== null ? editPostForm.imageBase64 : undefined,
+        imageBase64: imageBase64Payload,
       });
       if (result.success) {
         toast({
