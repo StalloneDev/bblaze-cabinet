@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
+import GoogleTranslate from "@/components/GoogleTranslate";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,7 +42,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-5">
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -51,8 +52,11 @@ const Header = () => {
                 {item.label}
               </Link>
             ))}
-            <ThemeToggle />
-            <Button asChild size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-medium hover:scale-105 transition-smooth">
+            <div className="flex items-center gap-2 border-l border-border pl-4">
+              <ThemeToggle />
+              <GoogleTranslate />
+            </div>
+            <Button asChild size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-medium hover:scale-105 transition-smooth ml-1">
               <Link href="/contact">Demander un Service</Link>
             </Button>
           </nav>
@@ -80,9 +84,12 @@ const Header = () => {
                   {item.label}
                 </Link>
               ))}
-              <div className="flex items-center justify-between pt-2">
-                <ThemeToggle />
-                <Button asChild size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90 flex-1 ml-4">
+              <div className="flex items-center justify-between pt-2 border-t border-border">
+                <div className="flex items-center gap-2">
+                  <ThemeToggle />
+                  <GoogleTranslate />
+                </div>
+                <Button asChild size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90 ml-4">
                   <Link href="/contact" onClick={() => setIsMenuOpen(false)}>Demander un Service</Link>
                 </Button>
               </div>

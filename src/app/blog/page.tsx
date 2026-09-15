@@ -32,7 +32,7 @@ export default async function BlogPage() {
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 mb-16">
             <div className="space-y-4 text-center md:text-left">
               <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">
-                Actualités & Publications
+                Publications
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
                 Suivez nos publications, analyses juridiques et actualités du cabinet.
