@@ -308,17 +308,17 @@ export default async function IndexPage() {
 
       {/* CTA Final */}
       <section className="py-12 md:py-16 px-4 container mx-auto">
-        <div className="relative overflow-hidden rounded-3xl bg-accent p-8 md:p-12 text-center text-accent-foreground shadow-strong border border-accent/20">
+        <div className="relative overflow-hidden rounded-3xl bg-primary p-8 md:p-12 text-center text-white shadow-strong border border-primary/20 dark:bg-primary/10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15),transparent_70%)] pointer-events-none" />
           <div className="relative z-10 max-w-3xl mx-auto space-y-4">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-white">
               Votre entreprise est confrontée à une question juridique ?
             </h2>
-            <p className="text-base md:text-lg opacity-90 font-medium">
+            <p className="text-base md:text-lg opacity-90 font-medium text-white/90">
               Échangeons sur votre situation.
             </p>
             <div className="pt-2">
-              <Button asChild size="lg" className="bg-background text-accent hover:bg-background/90 text-sm md:text-base px-8 py-5 rounded-full shadow-medium hover:scale-105 transition-transform font-bold">
+              <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm md:text-base px-8 py-5 rounded-full shadow-medium hover:scale-105 transition-transform font-bold">
                 <Link href="/contact">
                   Contacter BBLAZE
                 </Link>

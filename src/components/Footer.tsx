@@ -36,7 +36,7 @@ const Footer = ({ contact }: FooterProps = {}) => {
   };
 
   return (
-    <footer className="bg-primary text-primary-foreground">
+    <footer className="bg-primary text-white dark:bg-primary/10">
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo & Description */}
@@ -53,10 +53,10 @@ const Footer = ({ contact }: FooterProps = {}) => {
               </div>
               <div>
                 <h3 className="text-lg font-serif font-bold text-white">BBLAZE</h3>
-                <p className="text-[10px] text-primary-foreground/70 font-semibold uppercase tracking-wider leading-none mt-1">Cabinet Conseil</p>
+                <p className="text-[10px] text-white/70 font-semibold uppercase tracking-wider leading-none mt-1">Cabinet Conseil</p>
               </div>
             </div>
-            <p className="text-sm text-primary-foreground/80 leading-relaxed">
+            <p className="text-sm text-white/80 leading-relaxed">
               Votre partenaire de confiance pour tous vos besoins juridiques. Excellence, expertise et accompagnement personnalisé.
             </p>
           </div>
@@ -69,7 +69,7 @@ const Footer = ({ contact }: FooterProps = {}) => {
                 <li key={service.path}>
                   <Link
                     href={service.path}
-                    className="text-sm text-primary-foreground/80 hover:text-accent transition-smooth"
+                    className="text-sm text-white/80 hover:text-accent transition-smooth"
                   >
                     {service.label}
                   </Link>
@@ -83,22 +83,22 @@ const Footer = ({ contact }: FooterProps = {}) => {
             <h4 className="text-lg font-semibold mb-4 font-serif">Navigation</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-sm text-primary-foreground/80 hover:text-accent transition-smooth">
+                <Link href="/" className="text-sm text-white/80 hover:text-accent transition-smooth">
                   Accueil
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-sm text-primary-foreground/80 hover:text-accent transition-smooth">
+                <Link href="/about" className="text-sm text-white/80 hover:text-accent transition-smooth">
                   À Propos
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-sm text-primary-foreground/80 hover:text-accent transition-smooth">
+                <Link href="/blog" className="text-sm text-white/80 hover:text-accent transition-smooth">
                   Actualités / Blog
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-sm text-primary-foreground/80 hover:text-accent transition-smooth">
+                <Link href="/contact" className="text-sm text-white/80 hover:text-accent transition-smooth">
                   Contact
                 </Link>
               </li>
@@ -110,13 +110,13 @@ const Footer = ({ contact }: FooterProps = {}) => {
             <h4 className="text-lg font-semibold mb-4 font-serif">Contact</h4>
             <ul className="space-y-3">
               {displayContact.address && (
-                <li className="flex items-start gap-2 text-sm text-primary-foreground/80">
+                <li className="flex items-start gap-2 text-sm text-white/80">
                   <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                   <span>{displayContact.address}</span>
                 </li>
               )}
               {displayContact.phone && (
-                <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                <li className="flex items-center gap-2 text-sm text-white/80">
                   <Phone className="w-4 h-4 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
                     <a
@@ -143,7 +143,7 @@ const Footer = ({ contact }: FooterProps = {}) => {
                 </li>
               )}
               {displayContact.email && (
-                <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                <li className="flex items-center gap-2 text-sm text-white/80">
                   <Mail className="w-4 h-4 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
                     <Link
@@ -170,12 +170,12 @@ const Footer = ({ contact }: FooterProps = {}) => {
         </div>
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-primary-foreground/60">
+          <p className="text-sm text-white/60">
             © {new Date().getFullYear()} BBLAZE. Tous droits réservés.
           </p>
           <Link
             href="/admin"
-            className="flex items-center gap-1.5 text-xs text-primary-foreground/45 hover:text-accent transition-smooth"
+            className="flex items-center gap-1.5 text-xs text-white/45 hover:text-accent transition-smooth"
           >
             <ShieldAlert className="w-3.5 h-3.5" />
             Espace Administration
