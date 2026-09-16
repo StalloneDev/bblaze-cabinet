@@ -19,7 +19,7 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   GraduationCap: GraduationCap,
 };
 
-export const revalidate = 0; // Don't cache dynamic service edits
+
 
 export default async function ServiceDetailsPage({
   params,

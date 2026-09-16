@@ -10,7 +10,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 
-export const revalidate = 0;
+
 
 interface PageProps {
   params: Promise<{ id: string }>;

@@ -5,7 +5,7 @@ import DashboardClient from "./DashboardClient";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export const revalidate = 0; // Don't cache admin page
+
 
 export default async function AdminDashboardPage() {
   // 1. Vérification d'authentification côté serveur (ultra sécurisé)

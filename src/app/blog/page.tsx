@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { checkAdminAuth } from "@/app/actions";
 import BlogClient from "./BlogClient";
 
-export const revalidate = 0; // Show newly created posts instantly
+
 
 export default async function BlogPage() {
   const posts = await prisma.post.findMany({

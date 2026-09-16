@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
-export const revalidate = 0; // Fresh content on contact edit
+
 
 export default async function ContactPage() {
   const contact = await prisma.contactInfo.findFirst({
