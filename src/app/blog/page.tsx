@@ -10,10 +10,17 @@ import BlogClient from "./BlogClient";
 
 
 
+import { getImageUrl } from "@/lib/image-utils";
+
 export default async function BlogPage() {
-  const posts = await prisma.post.findMany({
+  const rawPosts = await prisma.post.findMany({
     orderBy: { createdAt: "desc" },
   });
+
+  const posts = rawPosts.map((post) => ({
+    ...post,
+    imageUrl: getImageUrl("post", post.id, post.imageUrl),
+  }));
 
   const contact = await prisma.contactInfo.findFirst({
     where: { id: "singleton" },

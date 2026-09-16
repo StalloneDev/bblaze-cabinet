@@ -12,6 +12,8 @@ import { Metadata, ResolvingMetadata } from "next";
 
 
 
+import { getImageUrl } from "@/lib/image-utils";
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -126,7 +128,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             {post.imageUrl ? (
               <div className="w-full h-64 md:h-[400px] relative bg-muted">
                 <img
-                  src={post.imageUrl}
+                  src={getImageUrl("post", post.id, post.imageUrl)}
                   alt={post.title}
                   fetchPriority="high"
                   decoding="async"
@@ -203,7 +205,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                     {relatedPost.imageUrl && (
                       <div className="h-40 w-full overflow-hidden">
                         <img 
-                          src={relatedPost.imageUrl} 
+                          src={getImageUrl("post", relatedPost.id, relatedPost.imageUrl)} 
                           alt={relatedPost.title}
                           loading="lazy"
                           decoding="async"

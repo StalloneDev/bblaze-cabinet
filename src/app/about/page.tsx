@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   description: "Découvrez l'histoire, la vision et les valeurs du cabinet BBLAZE. Votre partenaire juridique de confiance.",
 };
 
+import { getImageUrl } from "@/lib/image-utils";
+
 export default async function AboutPage() {
   const about = await prisma.aboutInfo.findFirst({
     where: { id: "singleton" },
@@ -22,7 +24,7 @@ export default async function AboutPage() {
 
   const title = about?.title || "Notre Histoire et Notre Vision";
   const content = about?.content || "Nous sommes un cabinet dédié à l'excellence. \n\nNotre mission est de vous accompagner dans tous vos défis juridiques avec professionnalisme et rigueur.";
-  const imageUrl = about?.imageUrl || "/hero-law.jpg";
+  const imageUrl = getImageUrl("about", "singleton", about?.imageUrl);
 
 
   // Formatter le texte pour gérer les retours à la ligne

@@ -10,6 +10,8 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
+import { getImageUrl } from "@/lib/image-utils";
+
 const iconMap: Record<string, React.ComponentType<any>> = {
   Briefcase: Briefcase,
   Users: Users,
@@ -83,7 +85,7 @@ export default async function ServiceDetailsPage({
               {/* Grande image de couverture du service */}
               <div className="h-64 sm:h-96 w-full relative overflow-hidden rounded-2xl shadow-medium bg-muted">
                 <Image
-                  src={service.imageUrl || `/services/${service.id}.png`}
+                  src={getImageUrl("service", service.id, service.imageUrl)}
                   alt={service.title}
                   fill
                   className="object-cover"

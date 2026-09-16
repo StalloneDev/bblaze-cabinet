@@ -24,6 +24,7 @@ import {
   MessageSquareText
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { getImageUrl } from "@/lib/image-utils";
 import Link from "next/link";
 
 // Associer les chaînes d'icônes aux composants Lucide correspondants
@@ -36,16 +37,31 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   GraduationCap: GraduationCap,
 };
 
-
-
 export default async function IndexPage() {
-  const services = await prisma.service.findMany();
+  const services = await prisma.service.findMany({
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      icon: true,
+      imageUrl: true,
+    },
+  });
+
   const contact = await prisma.contactInfo.findFirst({
     where: { id: "singleton" },
   });
+
   const recentPosts = await prisma.post.findMany({
     orderBy: { createdAt: "desc" },
     take: 6,
+    select: {
+      id: true,
+      title: true,
+      category: true,
+      createdAt: true,
+      imageUrl: true,
+    },
   });
 
   return (
@@ -155,7 +171,7 @@ export default async function IndexPage() {
                     description={service.description}
                     icon={IconComponent}
                     link={`/services/${service.id}`}
-                    imageUrl={service.imageUrl || `/services/${service.id}.png`}
+                    imageUrl={getImageUrl("service", service.id, service.imageUrl)}
                   />
                 </div>
               );
@@ -258,7 +274,7 @@ export default async function IndexPage() {
                   <Card className="h-full bg-background border-border hover:border-accent/40 shadow-soft hover:shadow-medium transition-smooth overflow-hidden flex flex-col">
                     {post.imageUrl ? (
                       <div className="w-full h-48 relative overflow-hidden">
-                        <Image src={post.imageUrl} alt={post.title} fill className="object-cover group-hover/card:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 400px" />
+                        <Image src={getImageUrl("post", post.id, post.imageUrl)} alt={post.title} fill className="object-cover group-hover/card:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 400px" />
                       </div>
                     ) : (
                       <div className="w-full h-48 bg-muted flex items-center justify-center">

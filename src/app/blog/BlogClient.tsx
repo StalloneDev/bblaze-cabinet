@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   Pencil,
 } from "lucide-react";
+import { getImageUrl } from "@/lib/image-utils";
 import Link from "next/link";
 
 interface Post {
@@ -161,11 +162,11 @@ export default function BlogClient({ initialPosts, isAdmin }: BlogClientProps) {
                       </Link>
                     )}
 
-                    {/* Post Image (Base64) */}
+                    {/* Post Image */}
                     {post.imageUrl ? (
                       <div className="h-52 w-full overflow-hidden relative bg-muted flex items-center justify-center">
                         <img
-                          src={post.imageUrl}
+                          src={getImageUrl("post", post.id, post.imageUrl)}
                           alt={post.title}
                           loading="lazy"
                           decoding="async"
