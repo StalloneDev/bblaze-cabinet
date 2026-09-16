@@ -1,6 +1,1 @@
-perf: optimize payload size by streaming base64 images via dedicated API endpoint
-
-- Created /api/images/[type]/[id] endpoint to serve base64 images with HTTP caching
-- Added getImageUrl utility to replace multi-MB base64 strings in HTML/RSC payloads
-- Selected only essential fields in Prisma queries for index, blog, and service pages
-- Resolved Vercel FALLBACK_BODY_TOO_LARGE (88MB ISR page) build error
+chore: clean temporary commit file
