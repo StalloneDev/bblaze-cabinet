@@ -1,1 +1,9 @@
-chore: clean temporary commit file
+style: adjust section typography, padding, hero title, and CTA separation
+
+- Harmonized section title font sizes across all sections to match 'Notre Promesse' (text-3xl md:text-4xl)
+- Reduced top padding and spacing above section titles for a tighter layout
+- Updated Hero title to 'Sécurisons vos activités économiques et commerciales'
+- Updated Hero subtitle to include 'sécurisation juridique'
+- Compacted section heights for Promesse, Pourquoi BBLAZE, and Notre Approche
+- Centered and refined Publications section header and layout
+- Detached final CTA into a distinct floating card container separated from the footer
