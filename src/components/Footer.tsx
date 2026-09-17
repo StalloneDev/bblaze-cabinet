@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 // Server Component — récupère ses propres données de contact
 const Footer = async () => {
   // Fetch silencieux : si la BD est inaccessible, on utilise les fallbacks
-  let contact = null;
+  let contact: { email: string; email2: string | null; phone: string; phone2: string | null; address: string } | null = null;
   try {
     contact = await prisma.contactInfo.findFirst({
       where: { id: "singleton" },
