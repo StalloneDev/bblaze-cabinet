@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 
 
 export default async function ContactPage() {
-  let contact = null;
+  let contact: Awaited<ReturnType<typeof prisma.contactInfo.findFirst>> = null;
   try {
     contact = await prisma.contactInfo.findFirst({ where: { id: "singleton" } });
   } catch {

@@ -13,8 +13,8 @@ import BlogClient from "./BlogClient";
 import { getImageUrl } from "@/lib/image-utils";
 
 export default async function BlogPage() {
-  let rawPosts: any[] = [];
-  let contact = null;
+  let rawPosts: Awaited<ReturnType<typeof prisma.post.findMany>> = [];
+  let contact: Awaited<ReturnType<typeof prisma.contactInfo.findFirst>> = null;
   try {
     [rawPosts, contact] = await Promise.all([
       prisma.post.findMany({ orderBy: { createdAt: "desc" } }),

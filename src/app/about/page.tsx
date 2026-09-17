@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 import { getImageUrl } from "@/lib/image-utils";
 
 export default async function AboutPage() {
-  let about = null;
-  let contact = null;
+  let about: Awaited<ReturnType<typeof prisma.aboutInfo.findFirst>> = null;
+  let contact: Awaited<ReturnType<typeof prisma.contactInfo.findFirst>> = null;
   try {
     [about, contact] = await Promise.all([
       prisma.aboutInfo.findFirst({ where: { id: "singleton" } }),
