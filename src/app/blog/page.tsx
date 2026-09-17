@@ -13,18 +13,21 @@ import BlogClient from "./BlogClient";
 import { getImageUrl } from "@/lib/image-utils";
 
 export default async function BlogPage() {
-  const rawPosts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  let rawPosts: any[] = [];
+  let contact = null;
+  try {
+    [rawPosts, contact] = await Promise.all([
+      prisma.post.findMany({ orderBy: { createdAt: "desc" } }),
+      prisma.contactInfo.findFirst({ where: { id: "singleton" } }),
+    ]);
+  } catch {
+    // BD inaccessible — on affiche la page vide
+  }
 
   const posts = rawPosts.map((post) => ({
     ...post,
     imageUrl: getImageUrl("post", post.id, post.imageUrl),
   }));
-
-  const contact = await prisma.contactInfo.findFirst({
-    where: { id: "singleton" },
-  });
 
   const isAdmin = await checkAdminAuth();
 

@@ -9,9 +9,12 @@ import { prisma } from "@/lib/prisma";
 
 
 export default async function ContactPage() {
-  const contact = await prisma.contactInfo.findFirst({
-    where: { id: "singleton" },
-  });
+  let contact = null;
+  try {
+    contact = await prisma.contactInfo.findFirst({ where: { id: "singleton" } });
+  } catch {
+    // BD inaccessible — on utilise les fallbacks
+  }
 
   const email = contact?.email || "contact@bblaze.fr";
   const phone = contact?.phone || "+33 1 23 45 67 89";

@@ -14,13 +14,16 @@ export const metadata: Metadata = {
 import { getImageUrl } from "@/lib/image-utils";
 
 export default async function AboutPage() {
-  const about = await prisma.aboutInfo.findFirst({
-    where: { id: "singleton" },
-  });
-
-  const contact = await prisma.contactInfo.findFirst({
-    where: { id: "singleton" },
-  });
+  let about = null;
+  let contact = null;
+  try {
+    [about, contact] = await Promise.all([
+      prisma.aboutInfo.findFirst({ where: { id: "singleton" } }),
+      prisma.contactInfo.findFirst({ where: { id: "singleton" } }),
+    ]);
+  } catch {
+    // BD inaccessible — on utilise les valeurs par défaut ci-dessous
+  }
 
   const title = about?.title || "Notre Histoire et Notre Vision";
   const content = about?.content || "Nous sommes un cabinet dédié à l'excellence. \n\nNotre mission est de vous accompagner dans tous vos défis juridiques avec professionnalisme et rigueur.";

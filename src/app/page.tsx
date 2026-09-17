@@ -38,31 +38,25 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 export default async function IndexPage() {
-  const services = await prisma.service.findMany({
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      icon: true,
-      imageUrl: true,
-    },
-  });
+  let services: any[] = [];
+  let contact = null;
+  let recentPosts: any[] = [];
 
-  const contact = await prisma.contactInfo.findFirst({
-    where: { id: "singleton" },
-  });
-
-  const recentPosts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 6,
-    select: {
-      id: true,
-      title: true,
-      category: true,
-      createdAt: true,
-      imageUrl: true,
-    },
-  });
+  try {
+    [services, contact, recentPosts] = await Promise.all([
+      prisma.service.findMany({
+        select: { id: true, title: true, description: true, icon: true, imageUrl: true },
+      }),
+      prisma.contactInfo.findFirst({ where: { id: "singleton" } }),
+      prisma.post.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 6,
+        select: { id: true, title: true, category: true, createdAt: true, imageUrl: true },
+      }),
+    ]);
+  } catch {
+    // BD inaccessible — on affiche la page avec les valeurs par défaut
+  }
 
   return (
     <div className="min-h-screen bg-background">
