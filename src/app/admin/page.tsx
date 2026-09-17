@@ -1,124 +1,15 @@
-"use client";
-
-import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Scale, Lock, Loader2, Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "@/hooks/use-toast";
-import { loginAdminAction } from "@/app/actions";
+import AdminLoginForm from "./AdminLoginForm";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!password) {
-      toast({
-        title: "Mot de passe requis",
-        description: "Veuillez entrer le mot de passe administrateur.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const result = await loginAdminAction(password);
-
-      if (result?.success) {
-        toast({
-          title: "Connexion réussie !",
-          description: "Redirection vers votre espace d'administration...",
-        });
-        window.location.href = "/admin/dashboard";
-      } else {
-        toast({
-          title: "Échec de connexion",
-          description: result?.error || "Mot de passe incorrect.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-      }
-    } catch (error) {
-      toast({
-        title: "Erreur de connexion",
-        description: "Une erreur est survenue lors de la connexion.",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background flex flex-col justify-between">
       <Header />
 
       <main className="flex-grow flex items-center justify-center pt-32 pb-20">
         <div className="container mx-auto px-4 w-full max-w-md">
-          <Card className="shadow-strong border-border bg-card/85 backdrop-blur-md">
-            <CardHeader className="space-y-4 text-center">
-              <div className="p-3.5 rounded-full bg-gradient-to-br from-primary to-navy-light w-fit mx-auto shadow-md">
-                <Scale className="w-8 h-8 text-primary-foreground" />
-              </div>
-              <div className="space-y-1.5">
-                <CardTitle className="text-3xl font-serif">Administration</CardTitle>
-                <CardDescription>
-                  Saisissez le mot de passe administrateur pour accéder au panneau de configuration du cabinet.
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleLogin} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="password">Mot de passe de sécurité</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Ex: Cabinet2026!"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="pl-10 pr-10 transition-smooth focus:border-accent"
-                    />
-                    <Lock className="absolute left-3 top-3 w-4 h-4 text-muted-foreground/60" />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-muted-foreground/60 hover:text-foreground transition-colors focus:outline-none"
-                      title={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90 shadow-medium hover:scale-[1.02] transition-smooth"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Vérification...
-                    </>
-                  ) : (
-                    "Se connecter au Dashboard"
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          <AdminLoginForm />
         </div>
       </main>
 
