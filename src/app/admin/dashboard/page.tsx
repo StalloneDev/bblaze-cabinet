@@ -13,11 +13,11 @@ export default async function AdminDashboardPage() {
   }
 
   // 2. Précharger toutes les données — avec fallback si la BD est inaccessible
-  let contact = null;
-  let services: any[] = [];
-  let messages: any[] = [];
-  let posts: any[] = [];
-  let about = null;
+  let contact: Awaited<ReturnType<typeof prisma.contactInfo.findFirst>> = null;
+  let services: Awaited<ReturnType<typeof prisma.service.findMany>> = [];
+  let messages: Awaited<ReturnType<typeof prisma.message.findMany>> = [];
+  let posts: Awaited<ReturnType<typeof prisma.post.findMany>> = [];
+  let about: Awaited<ReturnType<typeof prisma.aboutInfo.findFirst>> = null;
   let dbError = false;
 
   try {
