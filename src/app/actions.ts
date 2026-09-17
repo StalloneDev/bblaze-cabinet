@@ -3,7 +3,6 @@
 import { prisma } from "@/lib/prisma";
 import { cookies, headers } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { sendContactNotificationEmail } from "@/lib/mail";
 import { z } from "zod";
 
@@ -31,7 +30,7 @@ export async function loginAdminAction(password: string): Promise<{ success: boo
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: "/",
     });
-    redirect("/admin/dashboard");
+    return { success: true };
   }
   return { success: false, error: "Mot de passe incorrect" };
 }

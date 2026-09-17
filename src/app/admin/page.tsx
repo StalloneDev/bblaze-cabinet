@@ -47,10 +47,7 @@ export default function AdminLoginPage() {
         });
         setIsLoading(false);
       }
-    } catch (error: any) {
-      if (error?.message?.includes("NEXT_REDIRECT") || error?.digest?.includes("NEXT_REDIRECT")) {
-        return;
-      }
+    } catch (error) {
       toast({
         title: "Erreur de connexion",
         description: "Une erreur est survenue lors de la connexion.",
