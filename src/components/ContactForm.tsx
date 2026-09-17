@@ -130,53 +130,59 @@ const ContactForm = ({ subject = "Demande d'information" }: ContactFormProps) =>
         <Input
           id="name"
           type="text"
-          placeholder="Jean Dupont"
+          placeholder="Ex : Jean Dupont ou Société ACME SARL"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
           maxLength={100}
           className="transition-smooth focus:border-accent"
         />
+        <p className="text-xs text-muted-foreground">Votre nom et prénom, ou la raison sociale de votre entreprise.</p>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="email" className="flex items-center">
-          Email
+          Adresse email
           <span className="text-destructive font-bold ml-1">*</span>
         </Label>
         <Input
           id="email"
           type="email"
-          placeholder="jean.dupont@example.com"
+          placeholder="Ex : jean.dupont@entreprise.com"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           required
           maxLength={255}
           className="transition-smooth focus:border-accent"
         />
+        <p className="text-xs text-muted-foreground">Nous utiliserons cette adresse pour vous envoyer notre réponse.</p>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="phone">Téléphone</Label>
+        <Label htmlFor="phone" className="flex items-center">
+          Téléphone
+          <span className="text-xs text-muted-foreground ml-2 font-normal">(optionnel)</span>
+        </Label>
         <Input
           id="phone"
           type="tel"
-          placeholder="+33 1 23 45 67 89"
+          placeholder="Ex : +229 97 00 00 00 (WhatsApp de préférence)"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           maxLength={20}
           className="transition-smooth focus:border-accent"
         />
+        <p className="text-xs text-muted-foreground">Indiquez votre numéro si vous souhaitez être rappelé ou contacté via WhatsApp.</p>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="message" className="flex items-center">
-          Message
+          Votre demande
           <span className="text-destructive font-bold ml-1">*</span>
         </Label>
         <Textarea
           id="message"
-          placeholder="Décrivez votre demande..."
+          placeholder="Ex : Je souhaite obtenir un conseil juridique concernant la rédaction d'un contrat commercial avec un partenaire étranger dans l'espace OHADA. Mon entreprise est basée au Bénin et..."
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           required
@@ -185,8 +191,8 @@ const ContactForm = ({ subject = "Demande d'information" }: ContactFormProps) =>
           className="transition-smooth focus:border-accent resize-none"
         />
         <div className="flex justify-between items-center text-xs text-muted-foreground mt-1">
-          <span>* Veuillez détailler votre situation juridique.</span>
-          <span>{formData.message.length}/1000 caractères</span>
+          <span>Plus votre description est précise, plus notre réponse sera adaptée à votre situation.</span>
+          <span>{formData.message.length}/1000</span>
         </div>
       </div>
 
