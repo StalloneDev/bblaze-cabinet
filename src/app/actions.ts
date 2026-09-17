@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { cookies, headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { sendContactNotificationEmail } from "@/lib/mail";
 import { z } from "zod";
 
@@ -20,16 +21,17 @@ const ContactMessageSchema = z.object({
 
 // 1. Authentification Admin
 export async function loginAdminAction(password: string): Promise<{ success: boolean; error?: string }> {
-  const envPassword = process.env.ADMIN_PASSWORD || "Cabinet2026!";
-  if (password === envPassword) {
+  const envPassword = (process.env.ADMIN_PASSWORD || "Cabinet2026!").trim();
+  if (password.trim() === envPassword) {
     const cookieStore = await cookies();
     cookieStore.set("cabinet_admin_session", "true", {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: "/",
     });
-    return { success: true };
+    redirect("/admin/dashboard");
   }
   return { success: false, error: "Mot de passe incorrect" };
 }

@@ -33,28 +33,29 @@ export default function AdminLoginPage() {
     try {
       const result = await loginAdminAction(password);
 
-      if (result.success) {
+      if (result?.success) {
         toast({
           title: "Connexion réussie !",
           description: "Redirection vers votre espace d'administration...",
         });
-        setTimeout(() => {
-          window.location.replace("/admin/dashboard");
-        }, 200);
+        window.location.href = "/admin/dashboard";
       } else {
         toast({
           title: "Échec de connexion",
-          description: result.error || "Mot de passe incorrect.",
+          description: result?.error || "Mot de passe incorrect.",
           variant: "destructive",
         });
+        setIsLoading(false);
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.message?.includes("NEXT_REDIRECT") || error?.digest?.includes("NEXT_REDIRECT")) {
+        return;
+      }
       toast({
-        title: "Erreur réseau",
-        description: "Impossible de se connecter au serveur.",
+        title: "Erreur de connexion",
+        description: "Une erreur est survenue lors de la connexion.",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };
