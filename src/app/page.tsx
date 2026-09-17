@@ -38,9 +38,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 export default async function IndexPage() {
-  let services: Awaited<ReturnType<typeof prisma.service.findMany>> = [];
+  let services: any[] = [];
   let contact: Awaited<ReturnType<typeof prisma.contactInfo.findFirst>> = null;
-  let recentPosts: Awaited<ReturnType<typeof prisma.post.findMany>> = [];
+  let recentPosts: any[] = [];
 
   try {
     [services, contact, recentPosts] = await Promise.all([
