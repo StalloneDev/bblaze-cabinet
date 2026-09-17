@@ -1,24 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Scale, Mail, Phone, MapPin, ShieldAlert } from "lucide-react";
-interface FooterProps {
-  contact?: {
-    email?: string;
-    email2?: string | null;
-    phone?: string;
-    phone2?: string | null;
-    address?: string;
-  } | null;
-}
+import { Mail, Phone, MapPin, ShieldAlert } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 
-const Footer = ({ contact }: FooterProps = {}) => {
-  // Fallbacks par défaut si non disponible
+// Server Component — récupère ses propres données de contact
+const Footer = async () => {
+  // Fetch silencieux : si la BD est inaccessible, on utilise les fallbacks
+  let contact = null;
+  try {
+    contact = await prisma.contactInfo.findFirst({
+      where: { id: "singleton" },
+      select: { email: true, email2: true, phone: true, phone2: true, address: true },
+    });
+  } catch {
+    // Base de données inaccessible → on garde les fallbacks ci-dessous
+  }
+
   const displayContact = {
     address: contact?.address || "Cotonou, Bénin",
     phone: contact?.phone || "+229 01 00 00 00",
-    phone2: contact?.phone2,
-    email: contact?.email || "contact@bblaze.fr",
-    email2: contact?.email2,
+    phone2: contact?.phone2 || null,
+    email: contact?.email || "contact@cabinetbblaze.com",
+    email2: contact?.email2 || null,
   };
 
   const services = [
@@ -78,7 +81,7 @@ const Footer = ({ contact }: FooterProps = {}) => {
             </ul>
           </div>
 
-          {/* Links */}
+          {/* Navigation */}
           <div>
             <h4 className="text-lg font-semibold mb-4 font-serif">Navigation</h4>
             <ul className="space-y-2">
@@ -105,7 +108,7 @@ const Footer = ({ contact }: FooterProps = {}) => {
             </ul>
           </div>
 
-          {/* Contact — données depuis la BDD ou fallbacks */}
+          {/* Contact */}
           <div>
             <h4 className="text-lg font-semibold mb-4 font-serif">Contact</h4>
             <ul className="space-y-3">
@@ -169,7 +172,7 @@ const Footer = ({ contact }: FooterProps = {}) => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="border-t border-white/20 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-white/60">
             © {new Date().getFullYear()} BBLAZE. Tous droits réservés.
           </p>

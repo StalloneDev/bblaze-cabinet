@@ -328,7 +328,7 @@ export default async function IndexPage() {
         </div>
       </section>
 
-      <Footer contact={contact} />
+      <Footer />
     </div>
   );
 }
