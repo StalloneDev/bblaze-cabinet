@@ -74,8 +74,7 @@ export async function updateContactAction(data: {
       update: data,
       create: { id: "singleton", ...data },
     });
-    revalidatePath("/");
-    revalidatePath("/contact");
+    revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
     console.error(error);

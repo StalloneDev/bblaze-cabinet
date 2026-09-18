@@ -16,12 +16,30 @@ const Footer = async () => {
     // Base de données inaccessible → on garde les fallbacks ci-dessous
   }
 
+  function formatPhoneWithCountry(phoneStr: string) {
+    if (!phoneStr) return "";
+    const trimmed = phoneStr.trim();
+    if (trimmed.toUpperCase().includes("TOGO") || trimmed.toUpperCase().includes("BENIN")) {
+      return trimmed;
+    }
+    if (trimmed.includes("228") || trimmed.includes("97070472") || trimmed.startsWith("+228")) {
+      return `(TOGO) ${trimmed}`;
+    }
+    if (trimmed.includes("229") || trimmed.includes("0190362323") || trimmed.startsWith("+229")) {
+      return `(BENIN) ${trimmed}`;
+    }
+    return trimmed;
+  }
+
+  const rawPhone1 = contact?.phone || "+228 97 07 04 72";
+  const rawPhone2 = contact?.phone2 || "+229 01 90 36 23 23";
+
   const displayContact = {
-    address: contact?.address || "Cotonou, Bénin",
-    phone: contact?.phone || "+229 01 00 00 00",
-    phone2: contact?.phone2 || null,
-    email: contact?.email || "contact@cabinetbblaze.com",
-    email2: contact?.email2 || null,
+    address: contact?.address || "LOMÉ - COTONOU",
+    phone: formatPhoneWithCountry(rawPhone1),
+    phone2: formatPhoneWithCountry(rawPhone2),
+    email: contact?.email || "contactbblaze@gmail.com",
+    email2: contact?.email2 || "contact@cabinetbblaze.com",
   };
 
   const services = [

@@ -6,7 +6,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
+function formatPhoneWithCountry(phoneStr: string) {
+  if (!phoneStr) return "";
+  const trimmed = phoneStr.trim();
 
+  if (trimmed.toUpperCase().includes("TOGO") || trimmed.toUpperCase().includes("BENIN")) {
+    return trimmed;
+  }
+
+  if (trimmed.includes("228") || trimmed.includes("97070472") || trimmed.startsWith("+228")) {
+    return `(TOGO) ${trimmed}`;
+  }
+
+  if (trimmed.includes("229") || trimmed.includes("0190362323") || trimmed.startsWith("+229")) {
+    return `(BENIN) ${trimmed}`;
+  }
+
+  return trimmed;
+}
 
 export default async function ContactPage() {
   let contact: Awaited<ReturnType<typeof prisma.contactInfo.findFirst>> = null;
@@ -16,10 +33,12 @@ export default async function ContactPage() {
     // BD inaccessible — on utilise les fallbacks
   }
 
-  const email = contact?.email || "contact@bblaze.fr";
-  const phone = contact?.phone || "+33 1 23 45 67 89";
-  const address = contact?.address || "123 Avenue de la Justice, 75001 Paris, France";
-  const whatsappNumber = contact?.whatsappNumber || "+33123456789";
+  const email1 = contact?.email || "contactbblaze@gmail.com";
+  const email2 = contact?.email2 || "contact@cabinetbblaze.com";
+  const phone1 = contact?.phone || "+228 97 07 04 72";
+  const phone2 = contact?.phone2 || "+229 01 90 36 23 23";
+  const address = contact?.address || "LOMÉ - COTONOU";
+  const whatsappNumber = contact?.whatsappNumber || "+22897070472";
   const whatsappMsg = contact?.whatsappMsg || "Bonjour, je souhaite prendre contact avec le cabinet BBLAZE.";
 
   return (
@@ -64,9 +83,24 @@ export default async function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Téléphone</h3>
-                      <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-muted-foreground hover:text-accent transition-smooth">
-                        {phone}
-                      </a>
+                      <div className="space-y-1">
+                        {phone1 && (
+                          <a
+                            href={`tel:${phone1.replace(/\D/g, "")}`}
+                            className="block text-muted-foreground hover:text-accent transition-smooth"
+                          >
+                            {formatPhoneWithCountry(phone1)}
+                          </a>
+                        )}
+                        {phone2 && (
+                          <a
+                            href={`tel:${phone2.replace(/\D/g, "")}`}
+                            className="block text-muted-foreground hover:text-accent transition-smooth"
+                          >
+                            {formatPhoneWithCountry(phone2)}
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -76,9 +110,24 @@ export default async function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Email</h3>
-                      <a href={`mailto:${email}`} className="text-muted-foreground hover:text-accent transition-smooth">
-                        {email}
-                      </a>
+                      <div className="space-y-1">
+                        {email1 && (
+                          <a
+                            href={`mailto:${email1}`}
+                            className="block text-muted-foreground hover:text-accent transition-smooth"
+                          >
+                            {email1}
+                          </a>
+                        )}
+                        {email2 && (
+                          <a
+                            href={`mailto:${email2}`}
+                            className="block text-muted-foreground hover:text-accent transition-smooth"
+                          >
+                            {email2}
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
 

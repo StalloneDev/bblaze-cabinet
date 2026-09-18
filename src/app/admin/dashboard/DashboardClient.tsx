@@ -179,12 +179,12 @@ export default function DashboardClient({
 
   // --- ÉTAT ET TRANSMISSION : COORDONNÉES ---
   const [contactData, setContactData] = useState({
-    email: initialContact?.email || "contact@bblaze.fr",
-    email2: initialContact?.email2 || "",
-    phone: initialContact?.phone || "+33 1 23 45 67 89",
-    phone2: initialContact?.phone2 || "",
-    address: initialContact?.address || "123 Avenue de la Justice, 75001 Paris",
-    whatsappNumber: initialContact?.whatsappNumber || "+33123456789",
+    email: initialContact?.email || "contactbblaze@gmail.com",
+    email2: initialContact?.email2 || "contact@cabinetbblaze.com",
+    phone: initialContact?.phone || "+228 97 07 04 72",
+    phone2: initialContact?.phone2 || "+229 01 90 36 23 23",
+    address: initialContact?.address || "LOMÉ - COTONOU",
+    whatsappNumber: initialContact?.whatsappNumber || "+22897070472",
     whatsappMsg: initialContact?.whatsappMsg || "Bonjour, je souhaite obtenir des informations sur vos services.",
   });
 
